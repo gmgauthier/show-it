@@ -200,6 +200,12 @@ The v1 contract is the `.pptx` Show-It writes, plus a straightforward title-and-
 
 ## 7. Work plan
 
+v1 is M0 through M5, in this order. Show-It is the third Retro-Office codebase. Implementation starts after Write-It and Count-It v1 have been lived with. The next milestone starts when the current one's done line is true. Live with the whole set before M6. The tag at M5 is `v0.1.0`.
+
+Each milestone is a branch `feature/mN-short-name` from `master`. A milestone that owns the deck file, the editor, or the show brings a headless offline test for that slice. The CHECK harness is the one the other guests use. Lint covers `src/` only.
+
+The sections above are the specification. This section is the order of work. [brand/window.png](brand/window.png) is the chrome target at M0. The Saturday-market slides arrive with the milestones that own the file and the editor.
+
 | Milestone | Done when |
 |---|---|
 | **M0 — Window** | Menus, toolbars, paned outline stub, empty canvas, About. Matches the sketch. |
@@ -209,7 +215,69 @@ The v1 contract is the `.pptx` Show-It writes, plus a straightforward title-and-
 | **M4 — Polish** | Keys, last-file restore, `show-it.ini`, status `Slide n of m`. Outline import and export. |
 | **M5 — Package** | `debian/`, `scripts/release.sh` → `.deb`, tarball, AppImage. Tag `v0.1.0`. |
 
-Print handouts and PDF, ODP, extra autoshapes, and the rest of PresentationML: after v1.
+### M0 — Window
+
+The Meson tree, the gtkmm window, and `scripts/lint.sh`. No deck on disk.
+
+- Menus in order: File, Edit, View, Insert, Format, Tools, Slide Show, Help, with the mnemonics from the window section. Items are visible. Commands that need a deck are insensitive. Save stays sensitive.
+- Standard toolbar, then the format toolbar through alignment, then bullets. The drawing bar sits above the status bar with Text and Image visible. Those buttons act in M2.
+- A `Gtk::Paned`. The left list starts at 200 pixels and is an empty outline stub. The canvas is an empty page on the `#808080` pasteboard. Slide is the selected view. Outline and Sorter are present; Sorter acts in M3.
+- Title `Show-It - Untitled`. First launch 960×700. The ini remembers `window-width` and `window-height` until the rest of `show-it.ini` lands in M4.
+- Status message and the zoom cell. The slide counter becomes `Slide n of m` in M4.
+- About Show-It: name, version, one sentence, the Unlicense, Close.
+- Close (Ctrl+W) and Exit (Ctrl+Q). The right-click menu starts with Cut, Copy, Paste. F5 is on the Slide Show menu and acts in M3.
+
+**Done when** the line in the table is true and the window matches [brand/window.png](brand/window.png) with an empty canvas.
+
+### M1 — Deck file
+
+The deck round-trips. Click-to-edit waits until M2. This milestone opens, shows, and saves a deck this program wrote.
+
+- The `.pptx` is a zip of XML, written with libarchive and libxml2. The package is a presentation part, one slide master, one slide layout, a theme, one slide file per slide, and a media folder for the picture.
+- New, Open, Save, and Save As. The canvas shows the title, the bullets, and the one picture. The outline lists the titles. Dirty state is a trailing `*` on the title. Closing a dirty deck asks Save, Don’t Save, Cancel, with Save as the default.
+- A headless test builds a deck with a title, bullets, and one picture, writes it, and reads it back. That test is how a picture enters the file until Insert → Picture… lands in M2.
+
+**Done when** the M1 line in the table is true.
+
+### M2 — Edit
+
+- Click a box to select it. Type into the title or the body. Insert → Text Box adds a text box. Insert → Picture… places the one picture for that slide.
+- A simple master stamps the title and the body onto each slide. The master may draw the title larger. The toolbar shows 11 until the selection says otherwise.
+- The outline edits titles. Reordering slides waits for the sorter.
+- Bullets on the body box, from the Format menu and the format toolbar.
+- Find and Replace, one dialog, in the locked field order.
+- Font, size, bold, italic, underline, and alignment on the selected text. No font colour. A new deck starts at Sans 11.
+
+**Done when** the M2 line in the table is true. A headless test changes a title from the outline model, places a picture, and reads back a slide whose title and body came from the master.
+
+### M3 — Sorter + show
+
+- View → Sorter replaces the canvas with a thumbnail strip. Drag a thumbnail to reorder the slides. The `.pptx` stores that order.
+- Slide Show → Start Show, and F5. A fullscreen window of this deck. Click or space advances. Esc returns to the edit view. No presenter view and no transition editor.
+
+**Done when** the M3 line in the table is true. A headless test reorders three slides and reads the new order back from the `.pptx`.
+
+### M4 — Polish
+
+- The accelerators in the menus work for every command that exists.
+- `~/.config/show-it/show-it.ini` stores the shared keys: window size, recent files, last directory, default font and size, the toolbar and status-bar checks, and the zoom. Open Recent holds up to eight names. A missing file uses the sentence “That file is missing.” The last opened file is restored on the next launch.
+- The status bar reads `Slide n of m`, with the view name on the left and the zoom at the right.
+- Export writes an outline of titles and bullets as plain text or Markdown. Import builds slides from that outline. The picture and the master stay in the `.pptx`. Outline export is a different command from Save.
+- Print… sends the current slide to the system print dialog. Handouts and PDF wait until after v1.
+
+**Done when** the M4 line in the table is true. A headless test imports an outline of three titles with bullets and exports that outline back.
+
+### M5 — Package
+
+- `debian/`, a desktop file for `org.gmgauthier.ShowIt`, and `scripts/release.sh`.
+- The script produces the source tarball, the amd64 `.deb`, and the AppImage. The desktop `Name=` is the AppImage’s name.
+- Tag `v0.1.0` after `meson test` and lint are green.
+
+**Done when** the three artifacts exist for `0.1.0` and the tag points at that commit. Live with M0 through M5 before M6.
+
+### After v1
+
+Print handouts and PDF, `.odp`, extra autoshapes, notes view, and the rest of PresentationML. The drawing bar can grow past Text and Image only after v1.
 
 ## 8. Traps
 
