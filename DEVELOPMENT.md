@@ -10,7 +10,7 @@ Repos: https://gitea.scriptorium/gmgauthier/show-it (origin), https://github.com
 
 ## Status (2026-10-07)
 
-**Specification.** This repository holds the plan. Source begins at M0, after Write-It and Count-It v1 have been lived with. v1 is M0 through M5. Live with that set before M6. Tag `v0.1.0` at M5.
+**Specification.** This repository holds the plan. Source begins at M0, after Write-It 1.0 and Count-It 1.0 have been lived with. 1.0 is M0 through M5. Live with that release before M6. Tag `v1.0.0` at M5.
 
 The 960×700 first-launch mockup is [brand/window.png](brand/window.png). The sample deck in that picture is `market.pptx`.
 
@@ -200,7 +200,7 @@ The v1 contract is the `.pptx` Show-It writes, plus a straightforward title-and-
 
 ## 7. Work plan
 
-v1 is M0 through M5, in this order. Show-It is the third Retro-Office codebase. Implementation starts after Write-It and Count-It v1 have been lived with. The next milestone starts when the current one's done line is true. Live with the whole set before M6. The tag at M5 is `v0.1.0`.
+1.0 is M0 through M5, in this order. Show-It is the third Retro-Office codebase. Implementation starts after Write-It 1.0 and Count-It 1.0 have been lived with. The next milestone starts when the current one's done line is true. Live with that release before M6. M5 cuts `v1.0.0`.
 
 Each milestone is a branch `feature/mN-short-name` from `master`. A milestone that owns the deck file, the editor, or the show brings a headless offline test for that slice. The CHECK harness is the one the other guests use. Lint covers `src/` only.
 
@@ -213,7 +213,7 @@ The sections above are the specification. This section is the order of work. [br
 | **M2 — Edit** | Click to select a box; type; insert a picture; a simple master stamps title and body. Outline edits titles. |
 | **M3 — Sorter + show** | Thumbnail strip, drag to reorder. F5 fullscreen; click or space advances; Esc returns to edit. |
 | **M4 — Polish** | Keys, last-file restore, `show-it.ini`, status `Slide n of m`. Outline import and export. |
-| **M5 — Package** | `debian/`, `scripts/release.sh` → `.deb`, tarball, AppImage. Tag `v0.1.0`. |
+| **M5 — 1.0** | `debian/`, `scripts/release.sh` → `.deb`, tarball, AppImage. Tag `v1.0.0` and publish it. |
 
 ### M0 — Window
 
@@ -263,21 +263,21 @@ The deck round-trips. Click-to-edit waits until M2. This milestone opens, shows,
 - `~/.config/show-it/show-it.ini` stores the shared keys: window size, recent files, last directory, default font and size, the toolbar and status-bar checks, and the zoom. Open Recent holds up to eight names. A missing file uses the sentence “That file is missing.” The last opened file is restored on the next launch.
 - The status bar reads `Slide n of m`, with the view name on the left and the zoom at the right.
 - Export writes an outline of titles and bullets as plain text or Markdown. Import builds slides from that outline. The picture and the master stay in the `.pptx`. Outline export is a different command from Save.
-- Print… sends the current slide to the system print dialog. Handouts and PDF wait until after v1.
+- Print… sends the current slide to the system print dialog. Handouts and PDF wait until after 1.0.
 
 **Done when** the M4 line in the table is true. A headless test imports an outline of three titles with bullets and exports that outline back.
 
-### M5 — Package
+### M5 — 1.0
 
 - `debian/`, a desktop file for `org.gmgauthier.ShowIt`, and `scripts/release.sh`.
 - The script produces the source tarball, the amd64 `.deb`, and the AppImage. The desktop `Name=` is the AppImage’s name.
-- Tag `v0.1.0` after `meson test` and lint are green.
+- Tag `v1.0.0` after `meson test` and lint are green. Publish the tag and the three artifacts to Gitea and GitHub.
 
-**Done when** the three artifacts exist for `0.1.0` and the tag points at that commit. Live with M0 through M5 before M6.
+**Done when** `v1.0.0` is tagged and the three artifacts are on both remotes. Live with that release before M6.
 
-### After v1
+### After 1.0
 
-Print handouts and PDF, `.odp`, extra autoshapes, notes view, and the rest of PresentationML. The drawing bar can grow past Text and Image only after v1.
+Print handouts and PDF, `.odp`, extra autoshapes, notes view, and the rest of PresentationML. The drawing bar can grow past Text and Image only after 1.0.
 
 ## 8. Traps
 
